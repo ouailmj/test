@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>img/arc.png</file>
+        <file>img/back.png</file>
+        <file>img/click.png</file>
+        <file>img/coller.png</file>
+        <file>img/couper.png</file>
+        <file>img/enregistre.png</file>
+        <file>img/help.png</file>
+        <file>img/icone.ico</file>
+        <file>img/ligne.png</file>
+        <file>img/nouveau.png</file>
+        <file>img/ouvrir.png</file>
+        <file>img/pause.png</file>
+        <file>img/play.png</file>
+        <file>img/point.png</file>
+        <file>img/quitter.png</file>
+        <file>img/stop.png</file>
+        <file>img/supp.ico</file>
+        <file>img/info.png</file>
+        <file>img/back2.png</file>
+        <file>img/forward.png</file>
+        <file>img/green.png</file>
+        <file>img/red.png</file>
+    </qresource>
+</RCC>
