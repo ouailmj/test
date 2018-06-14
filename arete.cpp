@@ -1,26 +1,27 @@
-#include "arete.h"
-#include "sommet.h"
-#include <math.h>
+    #include "arete.h"
+    #include "sommet.h"
+    #include <math.h>
+    #include <QPainter>
+    #include <QDebug>
 
-#include <QPainter>
-#include <QDebug>
-static const double Pi = 3.14159265358979323846264338327950288419717;
-static double TwoPi = 2.0 * Pi;
+    static const double Pi = 3.14159265358979323846264338327950288419717;
+    static double TwoPi = 2.0 * Pi;
 
+//CONSTRUCTEUR ARETE
 arete::arete(sommet *sourceSommet, sommet *destSommet)
 {
-    areteSize = 10;
-    //setAcceptedMouseButtons();
+    areteSize = 10;//valeur d'arete minimale
+
     source = sourceSommet;
     dest = destSommet;
-    //source->ajouterArete(this);
-    //dest->ajouterArete(this);
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
-    text->setPos(boundingRect ().center ());
-    text->setTextInteractionFlags(Qt::TextEditorInteraction);
-    adjust();
+
+    setFlag(QGraphicsItem::ItemIsSelectable, true);//pour la selection
+    text->setPos(boundingRect ().center ());//pour l'entourage de l'arete
+    text->setTextInteractionFlags(Qt::TextEditorInteraction);//pouvoir interagir avec la valeur d'arete
+    adjustement();
     updatePosition();
 }
+
 
 sommet *arete::sourceSommet()
 {
@@ -32,28 +33,28 @@ sommet *arete::destSommet()
     return dest;
 }
 
-void arete::adjust()
+void arete::adjustement()
 {
     if (!source || !dest)
         return;
 
     QLineF line(mapFromItem(source, 0, 0), mapFromItem(dest, 0, 0));
-    qreal length = line.length();
+    setLine(line);
+    text->setPos(this->boundingRect ().center ());//la position de qtextgraphicsitem est au centre de l'arete
+    qreal length = line.length();//la distance de larete
 
     prepareGeometryChange();
 
-    if (length > qreal(20)) {
+    if (length > qreal(20)) {//l'arete disparait si on approche les deux sommets de moins de 20px
         QPointF areteOffset((line.dx() * 10) / length, (line.dy() * 10) / length);
         sourcePoint = line.p1() + areteOffset;
         destPoint = line.p2() - areteOffset;
     } else {
         sourcePoint = destPoint = line.p1();
     }
-    updatePosition();
 }
 
-QRectF arete::boundingRect() const
-{
+QRectF arete::boundingRect() const{
     if (!source || !dest)
         return QRectF();
 
@@ -72,57 +73,58 @@ void arete::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *
     if (!source || !dest)
         return;
 
-    QLineF line(sourcePoint, destPoint);
-    if (qFuzzyCompare(line.length(), qreal(0)))
+    QLineF ligne(sourcePoint, destPoint);
+    if (qFuzzyCompare(ligne.length(), qreal(0)))
         return;
 
     // arete (line)
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
-    painter->drawLine(line);
+    painter->drawLine(ligne);
 
     // arete (triangle)
-    double angle = ::acos(line.dx() / line.length());
-    if (line.dy() >= 0)
+    double angle = ::acos(ligne.dx() / ligne.length());
+    if (ligne.dy() >= 0)
         angle = TwoPi - angle;
 
-    QPointF sourceArrowP1 = sourcePoint + QPointF(sin(angle + Pi / 3) * areteSize,
-                                                  cos(angle + Pi / 3) * areteSize);
-    QPointF sourceArrowP2 = sourcePoint + QPointF(sin(angle + Pi - Pi / 3) * areteSize,
-                                                  cos(angle + Pi - Pi / 3) * areteSize);
-    QPointF destArrowP1 = destPoint + QPointF(sin(angle - Pi /3 ) * areteSize,
-                                              cos(angle - Pi /3) * areteSize);
-    QPointF destArrowP2 = destPoint + QPointF(sin(angle - Pi + Pi /3) * areteSize,
-                                              cos(angle - Pi + Pi /3) * areteSize);
+    //CREATION DES FLECHES
+        QPointF sourceflecheP1 = sourcePoint + QPointF(sin(angle + Pi / 3) * areteSize,
+                                                      cos(angle + Pi / 3) * areteSize);
+        QPointF sourceflecheP2 = sourcePoint + QPointF(sin(angle + Pi - Pi / 3) * areteSize,
+                                                      cos(angle + Pi - Pi / 3) * areteSize);
+        QPointF destflecheP1 = destPoint + QPointF(sin(angle - Pi /3 ) * areteSize,
+                                                  cos(angle - Pi /3) * areteSize);
+        QPointF destflecheP2 = destPoint + QPointF(sin(angle - Pi + Pi /3) * areteSize,
+                                                  cos(angle - Pi + Pi /3) * areteSize);
 
-    painter->setBrush(Qt::black);
-    painter->drawPolygon(QPolygonF() << line.p1() << sourceArrowP1 << sourceArrowP2);
-    painter->drawPolygon(QPolygonF() << line.p2() << destArrowP1 << destArrowP2);
-    updatePosition();
+        painter->setBrush(Qt::black);
+        painter->drawPolygon(QPolygonF() << ligne.p1() << sourceflecheP1 << sourceflecheP2);
+        painter->drawPolygon(QPolygonF() << ligne.p2() << destflecheP1 << destflecheP2);
+        updatePosition();
 }
 
 
 void arete::updatePosition()
 {
-    QLineF line(mapFromItem(source, 0, 0), mapFromItem(dest, 0, 0));
-    setLine(line);
+    QLineF ligne(mapFromItem(source, 0, 0), mapFromItem(dest, 0, 0));
+    setLine(ligne);
     text->setPos(this->boundingRect ().center ());
 
 }
 
 //********************************************************
 
+//CONSTRUCTEUR ARC
 arc::arc(sommet *sourceSommet, sommet *destSommet)
 {
     arcSize = 10;
-    //setAcceptedMouseButtons();
+
     source = sourceSommet;
     dest = destSommet;
-    //source->ajouterarc(this);
-    //dest->ajouterarc(this);
+
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     text->setPos(boundingRect ().center ());
     text->setTextInteractionFlags(Qt::TextEditorInteraction);
-    adjust();
+    adjustement();
     updatePosition();
 }
 
@@ -136,24 +138,26 @@ sommet *arc::destSommet()
     return dest;
 }
 
-void arc::adjust()
+void arc::adjustement()
 {
     if (!source || !dest)
         return;
 
-    QLineF line(mapFromItem(source, 0, 0), mapFromItem(dest, 0, 0));
-    qreal length = line.length();
+    QLineF ligne(mapFromItem(source, 0, 0), mapFromItem(dest, 0, 0));
+    setLine(ligne);
+    text->setPos(this->boundingRect ().center ());
+    qreal length = ligne.length();
 
     prepareGeometryChange();
 
     if (length > qreal(20)) {
-        QPointF arcOffset((line.dx() * 10) / length, (line.dy() * 10) / length);
-        sourcePoint = line.p1() + arcOffset;
-        destPoint = line.p2() - arcOffset;
+        QPointF arcOffset((ligne.dx() * 10) / length, (ligne.dy() * 10) / length);
+        sourcePoint = ligne.p1() + arcOffset;
+        destPoint = ligne.p2() - arcOffset;
     } else {
-        sourcePoint = destPoint = line.p1();
+        sourcePoint = destPoint = ligne.p1();
     }
-    updatePosition();
+    //updatePosition();
 }
 
 QRectF arc::boundingRect() const
@@ -176,38 +180,34 @@ void arc::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     if (!source || !dest)
         return;
 
-    QLineF line(sourcePoint, destPoint);
-    if (qFuzzyCompare(line.length(), qreal(0)))
+    QLineF ligne(sourcePoint, destPoint);
+    if (qFuzzyCompare(ligne.length(), qreal(0)))
         return;
 
     // arc (line)
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
-    painter->drawLine(line);
+    painter->drawLine(ligne);
 
     // arc (triangle)
-    double angle = ::acos(line.dx() / line.length());
-   if (line.dy() >= 0)
+    double angle = ::acos(ligne.dx() / ligne.length());
+   if (ligne.dy() >= 0)
         angle = TwoPi - angle;
 
-   //QPointF sourceArrowP1 = sourcePoint; //+ QPointF(sin(angle + Pi / 3) * arcSize,
-                                       //           cos(angle + Pi / 3) * arcSize);
-   //QPointF sourceArrowP2 = sourcePoint;// + QPointF(sin(angle + Pi - Pi / 3) * arcSize,
-                                       //           cos(angle + Pi - Pi / 3) * arcSize);
-    QPointF destArrowP1 = destPoint + QPointF(sin(angle - Pi /3 ) * arcSize,
+    QPointF destflecheP1 = destPoint + QPointF(sin(angle - Pi /3 ) * arcSize,
                                               cos(angle - Pi /3) * arcSize);
-    QPointF destArrowP2 = destPoint + QPointF(sin(angle - Pi + Pi /3) * arcSize,
+    QPointF destflecheP2 = destPoint + QPointF(sin(angle - Pi + Pi /3) * arcSize,
                                               cos(angle - Pi + Pi /3) * arcSize);
 
     painter->setBrush(Qt::black);
-    //painter->drawPolygon(QPolygonF() << line.p1() << sourceArrowP1 << sourceArrowP2);
-    painter->drawPolygon(QPolygonF() << line.p2() << destArrowP1 << destArrowP2);
+
+    painter->drawPolygon(QPolygonF() << ligne.p2() << destflecheP1 << destflecheP2);
     updatePosition();
 }
 
 void arc::updatePosition()
 {
-    QLineF line(mapFromItem(source, 0, 0), mapFromItem(dest, 0, 0));
-    setLine(line);
+    QLineF ligne(mapFromItem(source, 0, 0), mapFromItem(dest, 0, 0));
+    setLine(ligne);
     text->setPos(this->boundingRect ().center ());
 
 }

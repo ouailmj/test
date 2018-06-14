@@ -22,5 +22,11 @@
         <file>img/forward.png</file>
         <file>img/green.png</file>
         <file>img/red.png</file>
+        <file>img/forwards.png</file>
+        <file>img/job.png</file>
+        <file>img/cycle.png</file>
+        <file>img/P.png</file>
+        <file>img/cycle2.png</file>
+        <file>img/potentiel.png</file>
     </qresource>
 </RCC>

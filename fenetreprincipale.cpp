@@ -1,192 +1,242 @@
 #include "fenetreprincipale.h"
 #include "arete.h"
-fenetrePrincipale::fenetrePrincipale(){
-    afficheMenu();//affiche le menubar
-    affichetoolTop();//affiche le toolbar
-    afficheWidgetPrincipale();//affiche widget Principale
-    affichetoolbox();//ajout de toolbox
-    ajoutVue();
-    ajoutValeur();
-    this->setMinimumHeight(550);
-    vue->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
-    vue->setDragMode(QGraphicsView::RubberBandDrag);
-}
+//CONSTRUCTEUR...............................................
+    fenetrePrincipale::fenetrePrincipale(){
+            afficheMenu();//affiche le menubar
+            affichetoolTop();//affiche le toolbar
+            afficheWidgetPrincipale();//affiche widget Principale
+            affichetoolbox();//ajout de toolbox
+            ajoutVue();
+            ajoutValeur();
+            this->setMinimumHeight(550);
+            vue->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
+            vue->setDragMode(QGraphicsView::RubberBandDrag);
+    }
 
-void fenetrePrincipale::afficheMenu(){
-    fichier = menuBar()->addMenu("&Fichier");
-//*************************************************
-            nouveau = new QAction("&Nouveau fichier",this);
-            nouveau->setShortcut(QKeySequence("Ctrl+B"));
-            //signal_nouvelle_page
-                connect(nouveau, SIGNAL(triggered()), this, SLOT(nouvelPage()));
-                QPixmap imagedisplaynouveau(":/img/img/nouveau.png");
-                QIcon icon_nouveau(imagedisplaynouveau);
-                nouveau->setIcon(icon_nouveau);
-            fichier ->addAction(nouveau);
-//**************************************************
-            ouvrir = new QAction("&Ouvrir un dossier",this);
-            ouvrir->setShortcut(QKeySequence("Ctrl+O"));
-                QPixmap imagedisplayouvrir(":/img/img/ouvrir.png");
-                QIcon iconouvrir(imagedisplayouvrir);
-                ouvrir->setIcon(iconouvrir);
-                connect (ouvrir, SIGNAL (triggered()), this , SLOT (ouvrirSlot()));
-            fichier ->addAction(ouvrir);
-//**************************************************
-            enregistrer = new QAction("&Enregistrer fichier",this);
-            enregistrer->setShortcut(QKeySequence("Ctrl+S"));
-                //signal_enregistrer
-                connect(enregistrer, SIGNAL(triggered()), this, SLOT(enregistrerSlot()));
-                QPixmap imagedisplayenregistrer(":/img/img/enregistre.png");
-                QIcon iconenregistrer(imagedisplayenregistrer);
-                enregistrer->setIcon(iconenregistrer);
-            fichier ->addAction(enregistrer);
-//**************************************************
-            quitter = new QAction("&Quitter",this);
-            quitter->setShortcut(QKeySequence("Ctrl+Q"));
-                QPixmap imagedisplayquitter(":/img/img/quitter.png");
-                QIcon iconquitter(imagedisplayquitter);
-                quitter->setIcon(iconquitter);
-                //signal_quitter
-                connect(quitter, SIGNAL(triggered()), qApp, SLOT(quit()));
-            fichier ->addAction(quitter);
-//*****************************************************
-//*****************************************************
-        edition = menuBar()->addMenu("&Edition");
-            revenir = new QAction("&Revenir en arriere",this);
-            revenir->setShortcut(QKeySequence("Ctrl+Z"));
-                QPixmap imagedisplayrevenir(":/img/img/back.png");
-                QIcon iconrevenir(imagedisplayrevenir);
-                revenir->setIcon(iconrevenir);
-            edition ->addAction(revenir);
-//*********************************************************
-//*********************************************************
-        affichage = menuBar()->addMenu("&Affichage");
-//*********************************************************
-//*********************************************************
-        aide = menuBar()->addMenu("A&ide");
-            visiter = new QAction("&besoin d'aide",this);
-            visiter->setShortcut(QKeySequence("Ctrl+V"));
-                QPixmap imagedisplayvisiter(":/img/img/help.png");
-                QIcon iconvisiter(imagedisplayvisiter);
-                visiter->setIcon(iconvisiter);
-            aide ->addAction(visiter);
-//*********************************************************
-//*********************************************************
-    propos = menuBar()->addMenu("A &propos");
-        Apropos = new QAction("&A propos",this);
-        Apropos->setShortcut(QKeySequence("Ctrl+P"));
-            QPixmap imagedisplaypropos(":/img/img/help.png");
-            QIcon iconpropos(imagedisplaypropos);
-            Apropos->setIcon(iconpropos);
-            propos->addAction(Apropos);
-        //signal_apropos
-        connect(Apropos, SIGNAL(triggered()), this, SLOT(explication()));
-}
+//FONCTION AFFICHE LE MENUBAR...........................................
+    void fenetrePrincipale::afficheMenu(){
+        fichier = menuBar()->addMenu("&Fichier");
+        //*************************************************
+                nouveau = new QAction("&Nouveau fichier",this);
+                nouveau->setShortcut(QKeySequence("Ctrl+B"));
+                //signal_nouvelle_page
+                    connect(nouveau, SIGNAL(triggered()), this, SLOT(nouvelPage()));
+                    QPixmap imagedisplaynouveau(":/img/img/nouveau.png");
+                    QIcon icon_nouveau(imagedisplaynouveau);
+                    nouveau->setIcon(icon_nouveau);
+                fichier ->addAction(nouveau);
+        //**************************************************
+                ouvrir = new QAction("&Ouvrir un dossier",this);
+                ouvrir->setShortcut(QKeySequence("Ctrl+O"));
+                    QPixmap imagedisplayouvrir(":/img/img/ouvrir.png");
+                    QIcon iconouvrir(imagedisplayouvrir);
+                    ouvrir->setIcon(iconouvrir);
+                    connect (ouvrir, SIGNAL (triggered()), this , SLOT (ouvrirSlot()));
+                fichier ->addAction(ouvrir);
+        //**************************************************
+                enregistrer = new QAction("&Enregistrer fichier",this);
+                enregistrer->setShortcut(QKeySequence("Ctrl+S"));
+                    //signal_enregistrer
+                        connect(enregistrer, SIGNAL(triggered()), this, SLOT(enregistrerSlot()));
+                    QPixmap imagedisplayenregistrer(":/img/img/enregistre.png");
+                    QIcon iconenregistrer(imagedisplayenregistrer);
+                    enregistrer->setIcon(iconenregistrer);
+                fichier ->addAction(enregistrer);
+        //**************************************************
+                quitter = new QAction("&Quitter",this);
+                quitter->setShortcut(QKeySequence("Ctrl+Q"));
+                    QPixmap imagedisplayquitter(":/img/img/quitter.png");
+                    QIcon iconquitter(imagedisplayquitter);
+                    quitter->setIcon(iconquitter);
+                    //signal_quitter
+                        connect(quitter, SIGNAL(triggered()), qApp, SLOT(quit()));
+                fichier ->addAction(quitter);
+        //*****************************************************
+        //*****************************************************
+            edition = menuBar()->addMenu("&Edition");
+                revenir = new QAction("&Revenir en arriere",this);
+                revenir->setShortcut(QKeySequence("Ctrl+Z"));
+                    QPixmap imagedisplayrevenir(":/img/img/back.png");
+                    QIcon iconrevenir(imagedisplayrevenir);
+                    revenir->setIcon(iconrevenir);
+                    //signal_revenir_arriere
+                        connect(revenir,SIGNAL(triggered()),this,SLOT(revenirSlot()));
+                edition ->addAction(revenir);
+        //**************************************************
+                aller = new QAction("&Aller en avant",this);
+                aller->setShortcut(QKeySequence("Ctrl+Y"));
+                    QPixmap imagedisplayaller(":/img/img/forwards.png");
+                    QIcon iconaller(imagedisplayaller);
+                    aller->setIcon(iconaller);
+                    //signal_revenir_arriere
+                        connect(aller,SIGNAL(triggered()),this,SLOT(allezSlot()));
+                edition ->addAction(aller);
+        //*********************************************************
+        //*********************************************************
+            affichage = menuBar()->addMenu("&Affichage");
+        //*********************************************************
+        //*********************************************************
+            aide = menuBar()->addMenu("A&ide");
+                visiter = new QAction("&besoin d'aide",this);
+                visiter->setShortcut(QKeySequence("Ctrl+V"));
+                    QPixmap imagedisplayvisiter(":/img/img/help.png");
+                    QIcon iconvisiter(imagedisplayvisiter);
+                    visiter->setIcon(iconvisiter);
+                aide ->addAction(visiter);
+        //*********************************************************
+        //*********************************************************
+            propos = menuBar()->addMenu("A &propos");
+                Apropos = new QAction("&A propos",this);
+                Apropos->setShortcut(QKeySequence("Ctrl+P"));
+                    QPixmap imagedisplaypropos(":/img/img/help.png");
+                    QIcon iconpropos(imagedisplaypropos);
+                    Apropos->setIcon(iconpropos);
+                propos->addAction(Apropos);
+                //signal_apropos
+                    connect(Apropos, SIGNAL(triggered()), this, SLOT(explication()));
+    }
 
-void fenetrePrincipale::nouvelPage(){
-    fenetrePrincipale *nouvelFenetre = new fenetrePrincipale();//class fenetrePrincipale
-    nouvelFenetre->show();
-}
+//SLOT POUR CREER NOUVELLE PAGE(declaration ligne 146)
+    void fenetrePrincipale::nouvelPage(){
+        fenetrePrincipale *nouvelFenetre = new fenetrePrincipale();//class fenetrePrincipale
+        nouvelFenetre->show();
+    }
 
-void fenetrePrincipale::explication(){
-    fenetrePropos *Prs = new fenetrePropos;//class fenetrePropos deja definie
-}
+//SLOT POUR OUVRIR UN DOSSIER EXISTANT(declaration ligne 147)
+    void  fenetrePrincipale :: ouvrirSlot () {
+        QString filename = QFileDialog::getOpenFileName(this, "Open", QDir::home().absolutePath(), "Graph file (*.grp)");
+            qDebug() << filename;
+            sene->ouvrir_scene(filename);
+    }
 
+//SLOT POUR ENREGISTRER LE GRAPHE DANS UN NOUVEAU FICHIER
+    void  fenetrePrincipale::enregistrerSlot(){
+        QString filename = QFileDialog::getSaveFileName(this, "Save as", QDir::home().absolutePath(), "Graph file (*.grp)");
+            qDebug() << filename;
+            sene->structure_scene(filename);
+    }
+
+//SLOT POUR REVENIR EN ARRIERE
+    void fenetrePrincipale::revenirSlot(){
+        sene->revenir();
+    }
+
+//SLOT POUR ALLER EN AVANT
+    void fenetrePrincipale::allezSlot(){
+        sene->alleravant();
+    }
+
+//SLOT POUR A PROPOS
+    void fenetrePrincipale::explication(){
+        fenetrePropos *Prs = new fenetrePropos;//class fenetrePropos deja definie
+    }
+
+//AFFICHER LA TOOLBOX...........................................
 void fenetrePrincipale::affichetoolTop(){
-        newAct = new QAction(QIcon(":/img/img/nouveau.png"), "&Nouveau", this);
-        newAct->setShortcuts(QKeySequence::New);
-        connect(newAct,SIGNAL(triggered()),this,SLOT(nouvelPage()));
+    newAct = new QAction(QIcon(":/img/img/nouveau.png"), "&Nouveau", this);
+    newAct->setShortcuts(QKeySequence::New);
+    connect(newAct,SIGNAL(triggered()),this,SLOT(nouvelPage()));
 
-        openAct = new QAction(QIcon(":/img/img/ouvrir.png" ), "&Ouvrir", this);
-        openAct->setShortcuts(QKeySequence::Open);
-        connect(openAct,SIGNAL(triggered()),this,SLOT(ouvrirSlot()));
+    openAct = new QAction(QIcon(":/img/img/ouvrir.png" ), "&Ouvrir", this);
+    openAct->setShortcuts(QKeySequence::Open);
+    connect(openAct,SIGNAL(triggered()),this,SLOT(ouvrirSlot()));
 
-        saveAct = new QAction(QIcon(":/img/img/enregistre.png" ), "&Enregistrer", this);
-        saveAct->setShortcuts(QKeySequence::Save);
-        connect(saveAct,SIGNAL(triggered()),this,SLOT(enregistrerSlot()));
+    saveAct = new QAction(QIcon(":/img/img/enregistre.png" ), "&Enregistrer", this);
+    saveAct->setShortcuts(QKeySequence::Save);
+    connect(saveAct,SIGNAL(triggered()),this,SLOT(enregistrerSlot()));
 
-        deleteAct = new QAction(QIcon(":/img/img/supp.ico" ), "&Supprimer", this);
-        deleteAct->setShortcuts(QKeySequence::Delete);
-        connect(deleteAct,SIGNAL(triggered()),this,SLOT(suppSlot()));
+    deleteAct = new QAction(QIcon(":/img/img/supp.ico" ), "&Supprimer", this);
+    deleteAct->setShortcuts(QKeySequence::Delete);
+    connect(deleteAct,SIGNAL(triggered()),this,SLOT(suppSlot()));
 
-        copyAct = new QAction(QIcon(":/img/img/couper.png"), "&Couper", this);
-        copyAct->setShortcuts(QKeySequence::Cut);
-        connect(copyAct,SIGNAL(triggered()),this,SLOT(selectSlot()));
+    copyAct = new QAction(QIcon(":/img/img/couper.png"), "&Couper", this);
+    copyAct->setShortcuts(QKeySequence::Cut);
+    connect(copyAct,SIGNAL(triggered()),this,SLOT(selectSlot()));
 
-        backAct = new QAction(QIcon(":/img/img/back2.png" ), "&Back", this);
+    backAct = new QAction(QIcon(":/img/img/back2.png" ), "&Back", this);
+    connect(backAct,SIGNAL(triggered()),this,SLOT(revenirSlot()));
 
-        forwardAct = new QAction(QIcon(":/img/img/forward.png" ), "&Forward", this);
+    forwardAct = new QAction(QIcon(":/img/img/forward.png" ), "&Forward", this);
+    connect(forwardAct,SIGNAL(triggered()),this,SLOT(allezSlot()));
 
-        startAct = new QAction(QIcon(":/img/img/play.png" ), "&Debug", this);
-        connect(startAct,SIGNAL(triggered()),this,SLOT(debugSlot()));
+    startAct = new QAction(QIcon(":/img/img/play.png" ), "&Debug", this);
+    connect(startAct,SIGNAL(triggered()),this,SLOT(debugSlot()));
 
-        pauseAct = new QAction(QIcon(":/img/img/pause.png" ), "&Pause", this);
+    stopAct = new QAction(QIcon(":/img/img/stop.png" ), "&Stop", this);
+    connect(stopAct,SIGNAL(triggered()),this,SLOT(stopSlot()));
 
-        stopAct = new QAction(QIcon(":/img/img/stop.png" ), "&Stop", this);
+    potentielAct = new QAction(QIcon(":/img/img/potentiel.png" ), "&Potentiel", this);
+    connect(potentielAct,SIGNAL(triggered()),this,SLOT(potentielSlot()));
 
-        infoAct = new QAction(QIcon(":/img/img/info.png" ), "&Info", this);
-        connect(infoAct,SIGNAL(triggered()),this,SLOT(explication()));
+    cycleAct = new QAction(QIcon(":/img/img/cycle.png" ), "&Detection de cycle", this);
+    connect(cycleAct,SIGNAL(triggered()),this,SLOT(cycleSlot()));
 
-        helpAct = new QAction(QIcon(":/img/img/help.png" ), "&Help", this);
+    infoAct = new QAction(QIcon(":/img/img/info.png" ), "&Info", this);
+    connect(infoAct,SIGNAL(triggered()),this,SLOT(explication()));
 
-        initialAct = new QAction(QIcon(":/img/img/green.png"),"&Sommet initial" , this);
-        connect(initialAct,SIGNAL(triggered()),this,SLOT(initialSlot()));
+    helpAct = new QAction(QIcon(":/img/img/help.png" ), "&Help", this);
 
-        finalAct = new QAction(QIcon(":/img/img/red.png"),"&Sommet final" , this);
-        connect(finalAct,SIGNAL(triggered()),this,SLOT(finalSlot()));
+    initialAct = new QAction(QIcon(":/img/img/green.png"),"&Sommet initial" , this);
+    connect(initialAct,SIGNAL(triggered()),this,SLOT(initialSlot()));
 
-        sceneScale = new QComboBox;//pour pouvoir agrandir la scene
+    finalAct = new QAction(QIcon(":/img/img/red.png"),"&Sommet final" , this);
+    connect(finalAct,SIGNAL(triggered()),this,SLOT(finalSlot()));
+
+    sceneScale = new QComboBox;//pour pouvoir agrandir la scene
         QStringList scales;
         scales << tr("50%") << tr("75%") << tr("100%") << tr("125%") << tr("150%");
         sceneScale->addItems(scales);
         sceneScale->setCurrentIndex(2);
-        connect(sceneScale, SIGNAL(currentIndexChanged(QString)),
-                this, SLOT(sceneScaleslot(QString)));
+        //signal de scenescale
+            connect(sceneScale, SIGNAL(currentIndexChanged(QString)),
+                    this, SLOT(sceneScaleslot(QString)));
+
 
         //ajout de toolbar et de ces elements...
-        fileToolBar = this->addToolBar("Fichier");
-        fileToolBar->addAction(newAct);
-        fileToolBar->addSeparator();//separateur
-        fileToolBar->addAction(openAct);
-        fileToolBar->addSeparator();
-        fileToolBar->addAction(saveAct);
+            fileToolBar = this->addToolBar("Fichier");
+                fileToolBar->setFixedHeight(40);
+                fileToolBar->addAction(newAct);
+                fileToolBar->addSeparator();//separateur
+                fileToolBar->addAction(openAct);
+                fileToolBar->addSeparator();
+                fileToolBar->addAction(saveAct);
 
-        debugToolBar = this->addToolBar("Debug");
-        debugToolBar->addAction(startAct);
-        debugToolBar->addSeparator();
-        debugToolBar->addAction(pauseAct);
-        debugToolBar->addSeparator();
-        debugToolBar->addAction(stopAct);
+            debugToolBar = this->addToolBar("Debug");
+                debugToolBar->setFixedHeight(40);
+                debugToolBar->addAction(startAct);
+                debugToolBar->addSeparator();
+                debugToolBar->addAction(stopAct);
 
-        editToolBar = this->addToolBar("Edition" );
-        editToolBar->addAction(backAct);
-        editToolBar->addSeparator();
-        editToolBar->addAction(forwardAct);
-        editToolBar->addSeparator();
-        editToolBar->addAction(initialAct);
-        editToolBar->addSeparator();
-        editToolBar->addAction(finalAct);
-        editToolBar->addSeparator();
-        editToolBar->addAction(deleteAct);
-        editToolBar->addSeparator();
-        editToolBar->addAction(copyAct);
-        editToolBar->addSeparator();
-        editToolBar->addWidget(sceneScale);
-        sceneScale->setFixedHeight(25);
+            editToolBar = this->addToolBar("Edition" );
+                editToolBar->setFixedHeight(40);
+                editToolBar->addAction(backAct);
+                editToolBar->addSeparator();
+                editToolBar->addAction(forwardAct);
+                editToolBar->addSeparator();
+                editToolBar->addAction(initialAct);
+                editToolBar->addSeparator();
+                editToolBar->addAction(finalAct);
+                editToolBar->addSeparator();
+                editToolBar->addAction(deleteAct);
+                editToolBar->addSeparator();
+                editToolBar->addAction(copyAct);
+                editToolBar->addSeparator();
+                editToolBar->addWidget(sceneScale);
+                sceneScale->setFixedHeight(25);
 
-        searchToolBar = this->addToolBar("recherche");
-        formulaireSearch->addRow("recherche :" , searchBar);
-        widgetSearch->setLayout(formulaireSearch);
-        searchToolBar->addWidget(widgetSearch);
-        searchBar->setFixedWidth(250);
+            searchToolBar = this->addToolBar("recherche");
+                searchToolBar->setFixedHeight(40);
+                searchToolBar->addAction(potentielAct);
+                searchToolBar->addAction(cycleAct);
 
-        infos = this->addToolBar("information");
-        infos->addAction(infoAct);
-        infos->addSeparator();
-        infos->addAction(helpAct);
-
+            infos = this->addToolBar("information");
+                infos->setFixedHeight(40);
+                infos->addAction(infoAct);
+                infos->addSeparator();
+                infos->addAction(helpAct);
 }
 
+//SLOT POUT AGRANDIR UNE SCENE(par defaut 100%)
 void fenetrePrincipale::sceneScaleslot(const QString &scale){
     double newScale = scale.left(scale.indexOf(tr("%"))).toDouble() / 100.0;
     QMatrix oldscale = vue->matrix();
@@ -195,33 +245,76 @@ void fenetrePrincipale::sceneScaleslot(const QString &scale){
     vue->scale(newScale, newScale);
 }
 
+//SLOT DE CREATION DE SOMMET INITIAL(marqué en vert)
 void fenetrePrincipale::initialSlot(){
     sene->setModechoisi(graphscene::insererDebut);
 }
 
+//SLOT DE CREATION FINAL(marqué en rouge)
 void fenetrePrincipale::finalSlot(){
     sene->setModechoisi(graphscene::insererFin);
 }
 
+//SLOT DE DEBUG
 void fenetrePrincipale::debugSlot(){
-    sene->generationInitial();
+    if(sene->sommetListe.isEmpty()){
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("alert");
+        msgBox.setText("La scene ne contient pas d'elements");
+        msgBox.exec();
+    }
+    else{
+        if(probleme == false){
+                sene->jobshop();
+        }
+        else{
+            sene->flow_shop();
+        }
+    }
 }
 
+//SLOT D'ARRET
+void fenetrePrincipale::stopSlot(){
+
+}
+
+//SLOT DE METHODE POTENTIEL
+void fenetrePrincipale::potentielSlot(){
+
+}
+
+//SLOT DE DETECTION DE CYCLE
+void fenetrePrincipale::cycleSlot(){
+    QMessageBox msgBox;
+    if(sene->cycle(sene->sommetListe)){
+        msgBox.setText("Ce graphe contient des cycles");
+        msgBox.exec();
+    }
+    else{
+        msgBox.setText("Ce graphe ne contient pas de cycle");
+        msgBox.exec();
+    }
+
+}
+
+//FONCTION WIDGET PRINCIPALE QUI CONTIENT TOUT LE DESIGN...............
 void fenetrePrincipale::afficheWidgetPrincipale(){
     centre->setLayout(Hlayout);
     setCentralWidget(centre);
 }
 
+//SLOT QUI AFFICHE LA TOOLBOX
 void fenetrePrincipale::affichetoolbox(){
     ajoutboutonBox();//ajout des bouttons dans la toolbox
     ajoutModeAleatoire();
     toolbox1->setLayout(vlayout);
-    box1->addItem(toolbox1,"ToolBox1");
-    box1->addItem(aleatoirebox,"toolbox2");
+    box1->addItem(toolbox1,"Creation");
+    box1->addItem(aleatoirebox,"Aleatoire");
     box1->setFixedWidth(80);
     Hlayout->addWidget(box1);
 }
 
+//SLOT AJOUT DES BOUTTON AU TOOLBOX
 void fenetrePrincipale::ajoutboutonBox(){
     b_sommet->setIconSize(QSize(20,20));
     b_sommet->setGeometry(70,10,100,160);
@@ -231,15 +324,19 @@ void fenetrePrincipale::ajoutboutonBox(){
     QPixmap imagedisplay1(ImagePath1);
     QIcon icon1(imagedisplay1);
     b_sommet->setIcon(icon1);
-    QMenuBar *barre_sommet = new QMenuBar; // On crée notre QMenuBar
-        QMenu *menusommet = barre_sommet->addMenu("&Sommet");
-        QAction *actionsommet = menusommet->addAction("sommet");
-        QAction *actionjob = menusommet->addAction("job");
-        b_sommet->setMenu(menusommet);
-    connect(actionsommet, SIGNAL(triggered()), this, SLOT(sommetSlot()));
-    connect(actionjob, SIGNAL(triggered()), this, SLOT(jobSlot()));
+    connect(b_sommet, SIGNAL(clicked()), this, SLOT(sommetSlot()));
 vlayout->addWidget(b_sommet);
 
+    b_jobs->setIconSize(QSize(20,20));
+    b_jobs->setGeometry(70,10,100,160);
+    b_jobs->setFocusPolicy(Qt::TabFocus);
+    QString ImagePath0;
+    ImagePath0 = ":/img/img/job.png";
+    QPixmap imagedisplay0(ImagePath0);
+    QIcon icon0(imagedisplay0);
+    b_jobs->setIcon(icon0);
+connect(b_jobs, SIGNAL(clicked()), this, SLOT(jobSlot()));
+vlayout->addWidget(b_jobs);
 
     b_arete->setIconSize(QSize(20,20));
     b_arete->setGeometry(70,10,100,160);
@@ -290,15 +387,20 @@ vlayout->addWidget(b_select);
 vlayout->addStretch(0);//pour organiser le vlayout
 }
 
+//SLOT BOUTTON SOMMET
 void fenetrePrincipale::sommetSlot(){
     sene->job = false;
     foreach (sommet *som, sene->sommetListe) {
         som->pLineEdit2->hide();
     }
     sene->setModechoisi(graphscene::insererSommet);
-    //sene->cycle();
+    //sene->generationInitial();
+    //sene->cycle(sene->sommetListe);
+    //sene->flow_shop();
+    //sene->algopert();
 }
 
+//SLOT BOUTTON JOB
 void fenetrePrincipale::jobSlot(){
     sene->job = true;
     foreach (sommet *som, sene->sommetListe) {
@@ -307,27 +409,32 @@ void fenetrePrincipale::jobSlot(){
     sene->setModechoisi(graphscene::insererSommet);
 }
 
+//SLOT BOUTTON ARETE
 void fenetrePrincipale::areteSlot(){
     vue->setDragMode(QGraphicsView::NoDrag);
     sene->setModechoisi(graphscene::insererArete);
 }
 
+//SLOT BOUTTON ARC
 void fenetrePrincipale::arcSlot(){
     vue->setDragMode(QGraphicsView::NoDrag);
     sene->setModechoisi(graphscene::insererArc);
 }
 
+//SLOT BOUTTON SELECT
 void fenetrePrincipale::selectSlot(){
     sene->setModechoisi(graphscene::ins);
     vue->setDragMode(QGraphicsView::RubberBandDrag);
 }
 
+//SLOT BOUTTON SUPPRIMER
 void fenetrePrincipale::suppSlot(){
     sene->setModechoisi(graphscene::supp);
     vue->setDragMode(QGraphicsView::RubberBandDrag);
     sene->setModechoisi(graphscene::supp);
 }
 
+//FONTION D'AJOUT DES BOUTTONS DU MODE ALEATOIRE AU GENERATEUR
 void fenetrePrincipale::ajoutModeAleatoire(){
     spinaleatoireSommet->setRange(0, 100);
     spinaleatoireSommet->setSingleStep(1);
@@ -354,6 +461,7 @@ void fenetrePrincipale::ajoutModeAleatoire(){
     aleatoirebox->setLayout(vgroup);
 }
 
+//SLOT BOUTTON GO QUI PERMET DE GENERER UN GRAPHE ALEATOIRE
 void fenetrePrincipale::aleatoireSlot(){
     sene->a = spinaleatoireSommet->value();
     sene->b = spinaleatoireArete->value();
@@ -361,6 +469,7 @@ void fenetrePrincipale::aleatoireSlot(){
     sene->fonctionAleatoire();
 }
 
+//AJOUT D'UNE VIEW................................
 void fenetrePrincipale::ajoutVue(){
     sene->setSceneRect(QRect(100,40,800,450));
     vue->setScene(sene);
@@ -371,16 +480,21 @@ void fenetrePrincipale::ajoutVue(){
     Hlayout->addWidget(vue);
 }
 
+//PARTIE AFFICHAGE VALEURS
 void fenetrePrincipale::ajoutValeur(){
     valeur->setReadOnly(true);
     valeurlayout->addRow("Valeur:", valeur);
     b_algorithme->setFocusPolicy(Qt::TabFocus);
+
     QMenuBar *barre_algorithme = new QMenuBar; // On crée notre QMenuBar
         QMenu *menualgo = barre_algorithme->addMenu("&Sommet");
-        QAction *actionalgo1 = menualgo->addAction("algo1");
-        QAction *actionalgo2 = menualgo->addAction("algo2");
-        QAction *actionalgo3 = menualgo->addAction("algo3");
+        QAction *actionalgo1 = menualgo->addAction("Job Shop");
+        QAction *actionalgo2 = menualgo->addAction("Flow Shop");
         b_algorithme->setMenu(menualgo);
+        //slots du menualgo
+            connect(actionalgo1,SIGNAL(triggered()),this,SLOT(jobshopSlot()));
+            connect(actionalgo2,SIGNAL(triggered()),this,SLOT(flowshopSlot()));
+
     valeurlayout->addRow(b_algorithme);
     valeurlayout->addRow("job :" , editJob);
     valeurlayout->addRow("machines : " , machine);
@@ -395,6 +509,7 @@ void fenetrePrincipale::ajoutValeur(){
     timer->start(10);
 }
 
+//FONCTION QUI PERMET DE FAIRE UNE MISE A JOUR DES VALEURS
 void fenetrePrincipale::MyTimerSlot(){
     if(sene->job == false){
         foreach (sommet *som, sene->sommetListe) {
@@ -417,27 +532,21 @@ void fenetrePrincipale::MyTimerSlot(){
     }
 }
 
+//SLOT DE CREATION DE JOB
 void fenetrePrincipale::CreerJob(){
     sene->creerjob = true;
+    sene->job = true;
     sene->valJob = ii;
-    ii++;
+        ii++;
     sene->setModechoisi(graphscene::insererJob);
 }
 
-void  fenetrePrincipale::enregistrerSlot(){
-
-    QString filename = QFileDialog::getSaveFileName(this, "Save as", QDir::home().absolutePath(), "Graph file (*.grp)");
-
-        qDebug() << filename;
-
-        sene->scene_struct(filename);
+//SLOT DE L'ACTION JOB SHOP
+void fenetrePrincipale::jobshopSlot(){
+    probleme = false;
 }
 
-void  fenetrePrincipale :: ouvrirSlot () {
-    QString filename = QFileDialog::getOpenFileName(this, "open", QDir::home().absolutePath(), "Graph file (*.grp)");
-
-        qDebug() << filename;
-
-        sene->scene_open(filename);
-
+//SLOT DE L'ACTION DE FLOW SHOP
+void fenetrePrincipale::flowshopSlot(){
+    probleme = true;
 }
