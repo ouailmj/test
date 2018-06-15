@@ -29,8 +29,8 @@ public:
         int type() const Q_DECL_OVERRIDE { return Type; }
 
     //DATA PLUTOT ET PLUTARD POUR POTENTIEL
-        int date_plutot = 0;
-        int date_plutard = 100000000000;
+        int date_plutot;
+        int date_plutard;
 
     //les listes
         QList<arete *> aretelist;

@@ -12,6 +12,8 @@
 #include <QPointF>
 #include <QLineEdit>
 #include <random>
+#include <QFileDialog>
+#include <QTextEdit>
 #include <QDebug>
 #include "sommet.h"
 
@@ -81,6 +83,8 @@ public:
         static bool compare(QPoint a, QPoint b);
         int max(int a , int b);
 
+    //POUR LA METHODE POTENTIEL
+        QTextEdit *text = new QTextEdit();
 protected:
     //FONCTIONS DE CREATION DES DIFERENTS ELEMENT DE GRAPHE
         void creerSommet(QPointF position, QString valSommet, QString valMachine, bool selected, int valJob, int modde, bool enregistrer);

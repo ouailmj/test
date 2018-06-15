@@ -280,7 +280,8 @@ void fenetrePrincipale::stopSlot(){
 
 //SLOT DE METHODE POTENTIEL
 void fenetrePrincipale::potentielSlot(){
-
+    sene->algoPotentiel(sene->sommetListe);
+    sene->text->show();
 }
 
 //SLOT DE DETECTION DE CYCLE
@@ -389,19 +390,23 @@ vlayout->addStretch(0);//pour organiser le vlayout
 
 //SLOT BOUTTON SOMMET
 void fenetrePrincipale::sommetSlot(){
+    stopAct->setEnabled(false);
+    startAct->setEnabled(false);
+    potentielAct->setEnabled(true);
+    cycleAct->setEnabled(true);
     sene->job = false;
     foreach (sommet *som, sene->sommetListe) {
         som->pLineEdit2->hide();
     }
     sene->setModechoisi(graphscene::insererSommet);
-    //sene->generationInitial();
-    //sene->cycle(sene->sommetListe);
-    //sene->flow_shop();
-    //sene->algopert();
 }
 
 //SLOT BOUTTON JOB
 void fenetrePrincipale::jobSlot(){
+    stopAct->setEnabled(true);
+    startAct->setEnabled(true);
+    potentielAct->setEnabled(false);
+    cycleAct->setEnabled(false);
     sene->job = true;
     foreach (sommet *som, sene->sommetListe) {
         som->pLineEdit->hide();
@@ -534,6 +539,10 @@ void fenetrePrincipale::MyTimerSlot(){
 
 //SLOT DE CREATION DE JOB
 void fenetrePrincipale::CreerJob(){
+    stopAct->setEnabled(true);
+    startAct->setEnabled(true);
+    potentielAct->setEnabled(false);
+    cycleAct->setEnabled(false);
     sene->creerjob = true;
     sene->job = true;
     sene->valJob = ii;

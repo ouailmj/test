@@ -1490,7 +1490,8 @@ void graphscene::flow_shop(){
 
 //IMPLEMENTATION DE METHODE POTENTIEL
 double graphscene::algoPotentiel(QList<sommet *> Liste){
-
+    text->setReadOnly(true);
+    text->append("<h2>Resultat de la methode Potentiel :</h2>");
     calcul_degre(Liste);
     QList< QList<sommet *> > niveaux;//une liste de listes de niveaux
     QList<sommet *>tmp;//liste temporaire qui va contenir un niveau
@@ -1531,14 +1532,14 @@ double graphscene::algoPotentiel(QList<sommet *> Liste){
         sommet_de_potentiel+=niveaux[i];
     }
 
-
-
-
-    double cmax=0;
     foreach(sommet *som, sommet_de_potentiel){
-        som->date_plutot = 0;
-        som->date_plutard = 0;
-    }
+         som->date_plutot = 0;
+         som->date_plutard = 100000000;
+     }
+
+
+    //clacule des dates de debut au plus tot
+
     foreach(sommet * som,sommet_de_potentiel){
         foreach(arc * ac,som->arclist){
             if(som == ac->destSommet()){
@@ -1546,20 +1547,22 @@ double graphscene::algoPotentiel(QList<sommet *> Liste){
                 if(date > som->date_plutot){
                     som->date_plutot = date;
 
-                qDebug()<< sommet_de_potentiel.indexOf(som);
-                qDebug()<< som->date_plutot;
-                som->date_plutard = date;
-                }
+                    qDebug()<< sommet_de_potentiel.indexOf(som);
+                    qDebug()<< som->date_plutot;
 
+                }
             }
         }
     }
     std::reverse(sommet_de_potentiel.begin(), sommet_de_potentiel.end());//reverser l'orde
 
+    //clacule des dates de debut au plus tard
+    sommet_de_potentiel.at(0)->date_plutard = sommet_de_potentiel.at(0)->date_plutot;
+
     foreach (sommet *som, sommet_de_potentiel) {
         foreach(arc * ac,som->arclist){
             if(som == ac->sourceSommet()){
-                int date =   ac->destSommet()->date_plutot - ac->valarc;
+                int date =  ac->destSommet()->date_plutard - ac->valarc;
                 if(date < som->date_plutard)
                     som->date_plutard = date;
             }
@@ -1567,23 +1570,26 @@ double graphscene::algoPotentiel(QList<sommet *> Liste){
     }
     std::reverse(sommet_de_potentiel.begin(), sommet_de_potentiel.end());//retourne à l'orde original
 
-    QList<sommet *> tachecritiques;
-    cmax=0;
-    int cmin =0;
-            foreach (sommet * som, sommet_de_potentiel) {
-                if(som->date_plutard == som->date_plutot)
-                tachecritiques.append(som);
-            }
+    //duréé de l'ordonnancement
+    text->append("Les taches critiques sont :");
+    QList<sommet *>tachecritiques;
+    foreach (sommet * som, sommet_de_potentiel) {
+        if(som->date_plutard == som->date_plutot){
+            tachecritiques.append(som);
+            text->append("* " + som->valSommet);
+        }
+    }
+
+    double cmax=0;
 
     foreach(sommet *som,tachecritiques){
         if(som->date_plutot > cmax)
             cmax = som->date_plutot;
     }
-    QList<sommet *>tachecritiques_tmp = tachecritiques;
-    foreach (sommet *som, tachecritiques_tmp) {
-
+    qDebug() <<"la date est:" <<cmax;
+    for(int i = 0 ;i < tachecritiques.length() ;i++) {
+        qDebug() <<"les taches critiques sont :" << tachecritiques.at(i)->valMachine <<";" <<tachecritiques.at(i)->sommetJob;
     }
-    //fitness.append(cmax);
-    qDebug() << cmax;
+    text->append("Le cout max est :" + QString::number(cmax));
     return cmax;
 }
