@@ -5,162 +5,159 @@
 #include "sommet.h"
 #include "fenetreprincipale.h"
 //CONSTRUCTEUR................................
-    graphscene::graphscene(){
-        //qApp->setStyleSheet("QLineEdit#nameEdit {  }");
-        //on n'a rien fait en constructeur afin d'appeler le constructeur de la class QGraphicsScene
-    }
+graphscene::graphscene(){
+    //qApp->setStyleSheet("QLineEdit#nameEdit {  }");
+    //on n'a rien fait en constructeur afin d'appeler le constructeur de la class QGraphicsScene
+}
 
 //MODE CHOISI EN GRAPHSCENE
-    void graphscene::setModechoisi(modechoisi mode){
-        _mode = mode;//_mode est private
-    }
+void graphscene::setModechoisi(modechoisi mode){
+    _mode = mode;//_mode est private
+}
 
 //**********************************************************
 //FONCTION POUR CREER DES SOMMETS
-        void graphscene::creerSommet(QPointF position , QString valSommet , QString valMachine , bool selected , int valJob ,int modde, bool enregistrer){
-            _sommet = new sommet();//definition du pointeur
-            sommetListe << _sommet;
-            _sommet->indexSommet = sommetListe.indexOf(_sommet);
-            qDebug() << _sommet->indexSommet;
-            _sommet->setPos(position);
-            addItem(_sommet);//pour ajouter à la scene
-            if(enregistrer == false)
-                _sommet->valSommet.append(QString("%1").arg(valSommet));
-            else _sommet->valSommet = valSommet;
-            _sommet->pLineEdit = new QLineEdit(_sommet->valSommet);
-            _sommet->pMyProxy = new QGraphicsProxyWidget(_sommet);
-            _sommet->pLineEdit->setMaximumWidth(50);
-            _sommet->pMyProxy->setWidget(_sommet->pLineEdit);
-            _sommet->pMyProxy->hide();
-            _sommet->valMachine = valMachine;
-            _sommet->pLineEdit2 = new QLineEdit(_sommet->valMachine);
-            _sommet->pMyProxy2 = new QGraphicsProxyWidget(_sommet);
-            _sommet->pLineEdit2->setMaximumWidth(30);
-            _sommet->pMyProxy2->setWidget(_sommet->pLineEdit2);
-            _sommet->setSelected(selected);
-            _sommet->pMyProxy2->hide();
-            _sommet->sommetJob = valJob;
-            qDebug() << _sommet->sommetJob;
-            if(valJob != -1)
-                jobSommet << _sommet;
-            qDebug() << valJob;
-            _sommet->modde = modde;
-            revenirArriere.append(0);
-        }
+void graphscene::creerSommet(QPointF position , QString valSommet , QString valMachine , bool selected , int valJob ,int modde, bool enregistrer){
+    _sommet = new sommet();//definition du pointeur
+    sommetListe << _sommet;
+    _sommet->indexSommet = sommetListe.indexOf(_sommet);
+    _sommet->setPos(position);
+    addItem(_sommet);//pour ajouter à la scene
+    if(enregistrer == false)
+        _sommet->valSommet.append(QString("%1").arg(valSommet));
+    else _sommet->valSommet = valSommet;
+    _sommet->pLineEdit = new QLineEdit(_sommet->valSommet);
+    _sommet->pMyProxy = new QGraphicsProxyWidget(_sommet);
+    _sommet->pLineEdit->setMaximumWidth(50);
+    _sommet->pMyProxy->setWidget(_sommet->pLineEdit);
+    _sommet->pMyProxy->hide();
+    _sommet->valMachine = valMachine;
+    _sommet->pLineEdit2 = new QLineEdit(_sommet->valMachine);
+    _sommet->pMyProxy2 = new QGraphicsProxyWidget(_sommet);
+    _sommet->pLineEdit2->setMaximumWidth(30);
+    _sommet->pMyProxy2->setWidget(_sommet->pLineEdit2);
+    _sommet->setSelected(selected);
+    _sommet->pMyProxy2->hide();
+    _sommet->sommetJob = valJob;
+    if(valJob != -1)
+        jobSommet << _sommet;
+    _sommet->modde = modde;
+    revenirArriere.append(0);
+}
 
 //FONCTION POUR CREER DES ARETES
-        void graphscene::creerArete(sommet * sourceSommet , sommet * destSommet,QString text)
-            {
-                _arete = new arete(sourceSommet, destSommet);
-                areteliste.append(_arete);
-                sourceSommet->ajouterArete(_arete);
-                destSommet->ajouterArete(_arete);
-                _arete->text->setPlainText(text);
-                _arete->valArete = _arete->text->toPlainText().toDouble();
-                addItem(_arete);
-                _arete->adjustement();
-                revenirArriere.append(1);
-            }
+void graphscene::creerArete(sommet * sourceSommet , sommet * destSommet,QString text)
+{
+    _arete = new arete(sourceSommet, destSommet);
+    areteliste.append(_arete);
+    sourceSommet->ajouterArete(_arete);
+    destSommet->ajouterArete(_arete);
+    _arete->text->setPlainText(text);
+    _arete->valArete = _arete->text->toPlainText().toDouble();
+    addItem(_arete);
+    _arete->adjustement();
+    revenirArriere.append(1);
+}
 
 //FONCTION POUR CREER DES ARCS
-        void graphscene::creerArc(sommet * sourceSommet , sommet * destSommet , QString valarc){
-                _arc = new arc(sourceSommet, destSommet);
-                arcliste.append(_arc);
-                sourceSommet->ajouterArc(_arc);
-                destSommet->ajouterArc(_arc);
-                _arc->text->setPlainText(valarc);
-                _arc->valarc = _arc->text->toPlainText().toDouble();
-                addItem(_arc);
-                _arc->adjustement();
-                revenirArriere.append(2);
-            }
+void graphscene::creerArc(sommet * sourceSommet , sommet * destSommet , QString valarc){
+    _arc = new arc(sourceSommet, destSommet);
+    arcliste.append(_arc);
+    sourceSommet->ajouterArc(_arc);
+    destSommet->ajouterArc(_arc);
+    _arc->text->setPlainText(valarc);
+    _arc->valarc = _arc->text->toPlainText().toDouble();
+    addItem(_arc);
+    _arc->adjustement();
+    revenirArriere.append(2);
+}
 //**********************************************************
 
 //FONCTION POUR COMPARER ENTRE DEUX QPOINTS
-        bool graphscene::compare(QPoint a, QPoint b){
-            return b.y() < a.y();
-        }
+bool graphscene::compare(QPoint a, QPoint b){
+    return b.y() < a.y();
+}
 
 //FONCTION POUR DETECTER LE MAX ENTRE DEUX VALEURS
-        int graphscene::max(int a , int b){
-            if(a > b)
-                return a;
-            else return b;
-        }
+int graphscene::max(int a , int b){
+    if(a > b)
+        return a;
+    else return b;
+}
 
 //MOUSE PRESS EVENT AU MOMENT DE CLICK................................
 void graphscene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
-        if (mouseEvent->button() != Qt::LeftButton)//click != click_gauche
-            return;
+    if (mouseEvent->button() != Qt::LeftButton)//click != click_gauche
+        return;
 
-        //AFFECTER LES VALEURS AU SOMMETS EN CHAQUE CLICK...!!!!!!!!!
-            foreach (sommet *som, sommetListe) {
-                if (som->isSelected()){
-                    som->valSommet = som->pLineEdit->text();
-                    som->valMachine = som->pLineEdit2->text();
-                    update();
-                }
-            }
-
-        //TRAITEMENT DES DIFFERENTS CAS POSSIBLES
-            switch (_mode ) {
-            case insererArete://areteSlot
-                foreach (sommet *som, sommetListe) {//faire disparaitre les QlineEdit
-                    som->pMyProxy->hide();
-                    som->pMyProxy2->hide();
-                }
-                line = new QGraphicsLineItem(QLineF(mouseEvent->scenePos(),
-                                                    mouseEvent->scenePos()));
-                addItem(line);
-                break;
-
-            case insererArc://arcslot
-                foreach (sommet *som, sommetListe) {
-                    som->pMyProxy->hide();
-                    som->pMyProxy2->hide();
-                }
-                line = new QGraphicsLineItem(QLineF(mouseEvent->scenePos(),
-                                                    mouseEvent->scenePos()));
-                addItem(line);
-                break;
-
-            default:
-
-                break;
-            }
-
-        QGraphicsScene::mousePressEvent(mouseEvent);
-
+    //AFFECTER LES VALEURS AU SOMMETS EN CHAQUE CLICK...!!!!!!!!!
+    foreach (sommet *som, sommetListe) {
+        if (som->isSelected()){
+            som->valSommet = som->pLineEdit->text();
+            som->valMachine = som->pLineEdit2->text();
+            update();
+        }
     }
+
+    //TRAITEMENT DES DIFFERENTS CAS POSSIBLES
+    switch (_mode ) {
+    case insererArete://areteSlot
+        foreach (sommet *som, sommetListe) {//faire disparaitre les QlineEdit
+            som->pMyProxy->hide();
+            som->pMyProxy2->hide();
+        }
+        line = new QGraphicsLineItem(QLineF(mouseEvent->scenePos(),
+                                            mouseEvent->scenePos()));
+        addItem(line);
+        break;
+
+    case insererArc://arcslot
+        foreach (sommet *som, sommetListe) {
+            som->pMyProxy->hide();
+            som->pMyProxy2->hide();
+        }
+        line = new QGraphicsLineItem(QLineF(mouseEvent->scenePos(),
+                                            mouseEvent->scenePos()));
+        addItem(line);
+        break;
+
+    default:
+
+        break;
+    }
+
+    QGraphicsScene::mousePressEvent(mouseEvent);
+
+}
 
 //DEPLACEMENT DE SOURIS....................................
 void graphscene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent){
 
-            //qDebug() << mouseEvent->scenePos();
-            if(!sommetListe.empty()){
-                foreach (sommet *som, sommetListe) {
-                    if (som->isSelected()){
-                        som->valSommet = som->pLineEdit->text();
-                        som->valMachine = som->pLineEdit2->text();
-                    }
-                }
+    //qDebug() << mouseEvent->scenePos();
+    if(!sommetListe.empty()){
+        foreach (sommet *som, sommetListe) {
+            if (som->isSelected()){
+                som->valSommet = som->pLineEdit->text();
+                som->valMachine = som->pLineEdit2->text();
             }
-
-            if (_mode == insererArete && line != 0) {
-                QLineF newLine(line->line().p1(), mouseEvent->scenePos());
-                line->setLine(newLine);
-            }
-
-            else if (_mode == insererArc && line != 0) {
-                QLineF newLine(line->line().p1(), mouseEvent->scenePos());
-                line->setLine(newLine);
-            }
-
-            else if (_mode == ins) {//SELECTIONNER
-                QGraphicsScene::mouseMoveEvent(mouseEvent);
-            }
-
         }
+    }
+
+    if (_mode == insererArete && line != 0) {
+        QLineF newLine(line->line().p1(), mouseEvent->scenePos());
+        line->setLine(newLine);
+    }
+
+    else if (_mode == insererArc && line != 0) {
+        QLineF newLine(line->line().p1(), mouseEvent->scenePos());
+        line->setLine(newLine);
+    }
+
+    else if (_mode == selectionner) {//SELECTIONNER
+        QGraphicsScene::mouseMoveEvent(mouseEvent);
+    }
+
+}
 
 //RELEASE DE SOURIS..........................................
 void graphscene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
@@ -176,7 +173,7 @@ void graphscene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
                     som->setSelected(false);
                 }
             }
-            creerSommet(mouseEvent->scenePos(),QString::number(val),"1" ,true,-1,0,false);
+            creerSommet(mouseEvent->scenePos(),QString::number(val),"0" ,true,-1,0,false);
             val++;
         }
     }
@@ -189,29 +186,36 @@ void graphscene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
                         som->setSelected(false);
                     }
                 }
-                creerSommet(mouseEvent->scenePos(),QString::number(val),QString::number(val2),true,this->valJob,0,false);
+                creerSommet(mouseEvent->scenePos(),QString::number(val),QString::number(val2),true,this->nb_Job,0,false);
                 val++;
                 val2++;
+                cliqueGauche = true;
             }
         }
         else if(mouseEvent->button() == Qt::RightButton){
+           if(cliqueGauche){
             creerjob = false;
             qDebug() << "rightbutton";
             int i = 0;
             sommetInitial.append(jobSommet.at(0));
             sommetFinal.append(jobSommet.last());
             if(usedinit){
+                if(!sommetinit.isEmpty())
                 creerArc(sommetinit.first(),sommetInitial.last(),"1");
             }
             if(usedFin){
+                if(!sommetFin.isEmpty())
                 creerArc(sommetFinal.last(), sommetFin.first(),"1");
             }
+            if(jobSommet.length()!=1)
             while(i != (jobSommet.length()-1)){
                 creerArc(jobSommet.at(i) , jobSommet.at(i+1),"1");
                 i++;
             }
             val2=1;
             jobSommet.clear();
+            cliqueGauche = false;
+        }
         }
     }
 
@@ -228,6 +232,7 @@ void graphscene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
                 usedinit = true;
                 foreach(sommet *somet,sommetInitial){
                     creerArc(_sommet,somet,"0");
+                    sommetInitial.clear();
                 }
             }
         }
@@ -246,6 +251,7 @@ void graphscene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
                 sommetFin << _sommet;
                 foreach(sommet * somet,sommetFinal){
                     creerArc(somet,_sommet,"1");
+                    sommetFinal.clear();
                 }
             }
         }
@@ -290,7 +296,7 @@ void graphscene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
             if(exist ==false && exist2 == false){
                 creerArete(startItem,endItem,"1");
             }
-            else if(exist == true && exist == false){
+            else if(exist == true && exist2 == false){
                 exist = false;
             }
             else if(exist == false && exist2 == true){
@@ -332,12 +338,10 @@ void graphscene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
                 startItems.first() != endItems.first()) {
             sommet *startItem = qgraphicsitem_cast<sommet *>(startItems.first());
             sommet *endItem = qgraphicsitem_cast<sommet *>(endItems.first());
-            if(!areteliste.empty()){
+
                 foreach (arc * ac, arcliste){
                     if((ac->sourceSommet() == startItem && ac->destSommet() == endItem)){
                         exist = true;
-                        qDebug() << "oki";
-
                     }
                 }
                 foreach (arete * ar, areteliste) {
@@ -348,18 +352,7 @@ void graphscene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
                     }
 
                 }
-            }
-            else{
-                foreach (arc * ac, arcliste){
-                    if((ac->sourceSommet() == startItem && ac->destSommet() == endItem)
-                            //(ar->sourceSommet() == startItem && ar->destSommet() == endItem) ||
-                            ){
-                        exist = true;
-                        qDebug() << "oki";
 
-                    }
-                }
-            }
             if(exist == false){
                 creerArc(startItem,endItem,"1");
             }
@@ -369,7 +362,7 @@ void graphscene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
         }
     }
 
-    else if(_mode == supp){//mode supprimer
+    else if(_mode == supprimmer){//mode supprimer
         foreach (sommet *som, sommetListe) {
             som->pMyProxy->hide();
             som->pMyProxy2->hide();
@@ -409,6 +402,23 @@ void graphscene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent){
                         int index = sommetListe.indexOf(som);
                         if (index != -1)
                             sommetListe.removeAt(index);
+                        if(som->modde == 1 ){
+                          sommetinit.clear();
+                          usedinit = false;
+                        }
+                        else if(som->modde == 2)
+                        {
+                            sommetFin.clear();
+                            usedFin = false;
+                        }
+                        else {
+                            int index_sommetFinal = sommetFinal.indexOf(som);
+                            if(index_sommetFinal != -1)
+                                sommetFinal.removeAt(index_sommetFinal);
+                            int index_sommetInitial = sommetInitial.indexOf(som);
+                            if(index_sommetInitial != -1)
+                                sommetInitial.removeAt(index_sommetInitial);
+                        }
                     }
                     else {
                         som->indexSommet = sommetListe.indexOf(som);
@@ -459,7 +469,7 @@ void graphscene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent){
     if (mouseEvent->button() != Qt::LeftButton)//click != click_gauche
         return;
 
-    if(_mode == ins && job == false){
+    if(_mode == selectionner && job == false){
         if(!sommetListe.empty()){
             foreach (sommet *som, sommetListe) {
                 if (som->isSelected()){
@@ -473,7 +483,7 @@ void graphscene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent){
         }
     }
 
-    else if(_mode == ins && job == true){
+    else if(_mode == selectionner && job == true){
         if(!sommetListe.empty()){
             foreach (sommet *som, sommetListe) {
                 if (som->isSelected()){
@@ -544,264 +554,280 @@ void graphscene::fonctionAleatoire(){
 
 //FONCTION SUPPRESSEION TOUT LES SOMMETS
 void graphscene::supprimmerSommets(){
-        foreach(arc * _arc , arcliste){
-            _arc->sourceSommet()->supprimerArc(_arc);
-            _arc->destSommet()->supprimerArc(_arc);
-            int index_arc = arcliste.indexOf(_arc);
-            if (index_arc != -1)
-                arcliste.removeAt(index_arc);
-            removeItem(_arc);
-            delete _arc;
-        }
-
-        foreach(arete * _arete , areteliste){
-            _arete->sourceSommet()->supprimerArete(_arete);
-            _arete->destSommet()->supprimerArete(_arete);
-            int index_arete = areteliste.indexOf(_arete);
-            if (index_arete != -1)
-                areteliste.removeAt(index_arete);
-            removeItem(_arete);
-            delete _arete;
-
-        }
-
-        foreach(sommet * _sommet ,sommetListe ){
-            _sommet->supprimerArcs();
-            _sommet->supprimerAretes();
-            int index_sommet = sommetListe.indexOf(_sommet);
-            if (index_sommet != -1)
-                sommetListe.removeAt(index_sommet);
-
-            this->removeItem(_sommet);
-            delete _sommet;
-        }
+    foreach(arc * _arc , arcliste){
+        _arc->sourceSommet()->supprimerArc(_arc);
+        _arc->destSommet()->supprimerArc(_arc);
+        int index_arc = arcliste.indexOf(_arc);
+        if (index_arc != -1)
+            arcliste.removeAt(index_arc);
+        removeItem(_arc);
+        delete _arc;
     }
+
+    foreach(arete * _arete , areteliste){
+        _arete->sourceSommet()->supprimerArete(_arete);
+        _arete->destSommet()->supprimerArete(_arete);
+        int index_arete = areteliste.indexOf(_arete);
+        if (index_arete != -1)
+            areteliste.removeAt(index_arete);
+        removeItem(_arete);
+        delete _arete;
+
+    }
+
+    foreach(sommet * _sommet ,sommetListe ){
+        _sommet->supprimerArcs();
+        _sommet->supprimerAretes();
+        int index = sommetListe.indexOf(_sommet);
+        if (index != -1)
+            sommetListe.removeAt(index);
+        if(_sommet->modde == 1 ){
+          sommetinit.clear();
+          usedinit = false;
+        }
+        else if(_sommet->modde == 2)
+        {
+            sommetFin.clear();
+            usedFin = false;
+        }
+        else {
+            int index_sommetFinal = sommetFinal.indexOf(_sommet);
+            if(index_sommetFinal != -1)
+                sommetFinal.removeAt(index_sommetFinal);
+            int index_sommetInitial = sommetInitial.indexOf(_sommet);
+            if(index_sommetInitial != -1)
+                sommetInitial.removeAt(index_sommetInitial);
+        }
+        removeItem(_sommet);
+        delete _sommet;
+    }
+}
 
 //FONCTION D'ENREGISTREMENT DE LA SCENE DANS LE FICHIER(.grp)
-void graphscene::structure_scene(QString filename){
+void graphscene::structure_scene(QString nom_de_fichier){
 
-        int j = sommetListe.size();
+    int j = sommetListe.size();
 
-        QString **matrice_adjacence = new QString*[j];
-        for(int i = 0  ;i < j;i++){
-            matrice_adjacence[i] = new QString[j];
-            for(int k = 0; k < j ; k++){
-                if(i == k)
-                    matrice_adjacence[i][k] = "0";
-                else
-                    matrice_adjacence[i][k] = "-";
-            }
-        }
-
-        foreach(QGraphicsItem *item, items()){
-
-            if (item->type() == arete::Type){
-                arete *_arete = qgraphicsitem_cast<arete *>(item);
-                matrice_adjacence[_arete->sourceSommet()->indexSommet][_arete->destSommet()->indexSommet] = _arete->text->toPlainText();
-                matrice_adjacence[_arete->destSommet()->indexSommet][_arete->sourceSommet()->indexSommet] = _arete->text->toPlainText();
-            }
-
-            if (item->type() == arc::Type){
-                arc *_arc = qgraphicsitem_cast<arc *>(item);
-                matrice_adjacence[_arc->sourceSommet()->indexSommet][_arc->destSommet()->indexSommet] = _arc->text->toPlainText();
-            }
-        }
-
-
-        QFile file( filename );
-        if ( file.open(QIODevice::WriteOnly | QIODevice::Text) )
-        {
-            QTextStream stream( &file );
-            stream << valJob << endl;
-            stream << sommetListe.size() << endl;
-
-            foreach (sommet *pos, sommetListe) {
-                stream << pos->x() << ";" << pos->y() << ";" << pos->valSommet << ";"<<pos->valMachine <<";"<<pos->sommetJob <<";"<<pos->modde<<";"<<endl;
-            }
-
-            for(int i = 0 ; i < j ; i++ ){
-                for (int k = 0; k < j ; k++){
-                    stream << matrice_adjacence[i][k]<<" ";
-                }
-                stream << endl;
-            }
-
-            file.close();
-
-        }else {
-            qDebug() << "impossible d'enregister le fichier";
+    QString **matrice_adjacence = new QString*[j];
+    for(int i = 0  ;i < j;i++){
+        matrice_adjacence[i] = new QString[j];
+        for(int k = 0; k < j ; k++){
+            if(i == k)
+                matrice_adjacence[i][k] = "0";
+            else
+                matrice_adjacence[i][k] = "-";
         }
     }
 
-//FONCTION POUR OUVRIR LA SCENE ENREGISTRER(.grp)
-void graphscene::ouvrir_scene(QString filename){
+    foreach(QGraphicsItem *item, items()){
 
-        bool deja = true;
+        if (item->type() == arete::Type){
+            arete *_arete = qgraphicsitem_cast<arete *>(item);
+            matrice_adjacence[_arete->sourceSommet()->indexSommet][_arete->destSommet()->indexSommet] = _arete->text->toPlainText();
+            matrice_adjacence[_arete->destSommet()->indexSommet][_arete->sourceSommet()->indexSommet] = _arete->text->toPlainText();
+        }
 
-        QFile file( filename );
-        if ( file.open(QIODevice::ReadOnly | QIODevice::Text) )
-        {
+        if (item->type() == arc::Type){
+            arc *_arc = qgraphicsitem_cast<arc *>(item);
+            matrice_adjacence[_arc->sourceSommet()->indexSommet][_arc->destSommet()->indexSommet] = _arc->text->toPlainText();
+        }
+    }
 
-            supprimmerSommets();
-            QString data;
-            data = file.readLine();
-            valJob = data.toInt();
-            data = file.readLine();
-            int r = data.toInt();
-            val = r + 1;
-            for(int i = 0 ; i < r; i++){
 
-                data = file.readLine();
+    QFile fichier( nom_de_fichier );
+    if ( fichier.open(QIODevice::WriteOnly | QIODevice::Text) )
+    {
+        QTextStream stream( &fichier );
+        stream << nb_Job << endl;
+        stream << sommetListe.size() << endl;
 
-                QStringList list = data.split(';');
-                qreal x = list.at(0).toDouble();
-                qreal y = list.at(1).toDouble();
-                QString valeur = list.at(2);
-                QString valeurMachine = list.at(3);
-                int z = list.at(4).toInt();
-                int w = list.at(5).toInt();
-                creerSommet(QPointF(x,y),valeur,valeurMachine,false,z,w,true);
+        foreach (sommet *pos, sommetListe) {
+            stream << pos->x() << ";" << pos->y() << ";" << pos->valSommet << ";"<<pos->valMachine <<";"<<pos->sommetJob <<";"<<pos->modde<<";"<<endl;
+        }
+
+        for(int i = 0 ; i < j ; i++ ){
+            for (int k = 0; k < j ; k++){
+                stream << matrice_adjacence[i][k]<<" ";
             }
-            for(int i = 0 ; i < r ;i++){
+            stream << endl;
+        }
 
-                data = file.readLine();
+        fichier.close();
 
-                QStringList list = data.split(" ");
+    }else {
+        qDebug() << "impossible d'enregister le fichier";
+    }
+}
+
+//FONCTION POUR OUVRIR LA SCENE ENREGISTRER(.grp)
+void graphscene::ouvrir_scene(QString nom_de_fichier){
+
+    bool deja = true;
+
+    QFile fichier( nom_de_fichier );
+    if ( fichier.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+
+        supprimmerSommets();
+        QString data;
+        data = fichier.readLine();
+        nb_Job = data.toInt();
+        data = fichier.readLine();
+        int r = data.toInt();
+        val = r + 1;
+        for(int i = 0 ; i < r; i++){
+
+            data = fichier.readLine();
+
+            QStringList list = data.split(';');
+            qreal x = list.at(0).toDouble();
+            qreal y = list.at(1).toDouble();
+            QString valeur = list.at(2);
+            QString valeurMachine = list.at(3);
+            int z = list.at(4).toInt();
+            int w = list.at(5).toInt();
+            creerSommet(QPointF(x,y),valeur,valeurMachine,false,z,w,true);
+        }
+        for(int i = 0 ; i < r ;i++){
+
+            data = fichier.readLine();
+
+            QStringList list = data.split(" ");
 
 
-                for(int K = 0;K < r ;K++){
-                    if(list.at(K) != "-"){
+            for(int K = 0;K < r ;K++){
+                if(list.at(K) != "-"){
 
-                        foreach(sommet *_sommet1, sommetListe){
-                            if (_sommet1->indexSommet == i){
-                                foreach(sommet *_sommet2, sommetListe){
-                                    if(_sommet2->indexSommet == K){
-                                        foreach(arc *arx ,arcliste){
-                                            if(arx->sourceSommet() == _sommet2 && arx->destSommet() == _sommet1 && arx->valarc == list.at(K).toDouble()){
-                                                arx->sourceSommet()->supprimerArc(arx);
-                                                arx->destSommet()->supprimerArc(arx);
-                                                int index_arx = arcliste.indexOf(arx);
-                                                if (index_arx != -1)
-                                                    arcliste.removeAt(index_arx);
-                                                delete arx;
-                                                deja = false;
+                    foreach(sommet *_sommet1, sommetListe){
+                        if (_sommet1->indexSommet == i){
+                            foreach(sommet *_sommet2, sommetListe){
+                                if(_sommet2->indexSommet == K){
+                                    foreach(arc *arx ,arcliste){
+                                        if(arx->sourceSommet() == _sommet2 && arx->destSommet() == _sommet1 && arx->valarc == list.at(K).toDouble()){
+                                            arx->sourceSommet()->supprimerArc(arx);
+                                            arx->destSommet()->supprimerArc(arx);
+                                            int index_arx = arcliste.indexOf(arx);
+                                            if (index_arx != -1)
+                                                arcliste.removeAt(index_arx);
+                                            delete arx;
+                                            deja = false;
 
-                                            }}
-                                        if(deja == false){
-                                            if(_sommet1 != _sommet2)
-                                                creerArete(_sommet1,_sommet2,list.at((K)));
-                                        }
-
-
-                                        else {
-                                            if(_sommet1 != _sommet2)
-                                                creerArc(_sommet1,_sommet2,list.at(K));
-                                        }
-                                        deja = true;
-
+                                        }}
+                                    if(deja == false){
+                                        if(_sommet1 != _sommet2)
+                                            creerArete(_sommet1,_sommet2,list.at((K)));
                                     }
+
+
+                                    else {
+                                        if(_sommet1 != _sommet2)
+                                            creerArc(_sommet1,_sommet2,list.at(K));
+                                    }
+                                    deja = true;
+
                                 }
                             }
-
                         }
+
                     }
                 }
             }
-
-            file.close();
-
-        } else {
-            qDebug() << "impossible d'ouvrir le fichier";
         }
 
+        fichier.close();
 
+    } else {
+        qDebug() << "impossible d'ouvrir le fichier";
     }
+
+
+}
 
 //FONCTION POUR REVENIR EN ARRIERE
-    void graphscene::revenir(){
-        int lengh = revenirArriere.length();
-        if(lengh>0){
-            if(revenirArriere.last() == 0){
-                sommet * somm = qgraphicsitem_cast<sommet *>(sommetListe.last());
-                foreach(arete *_arete ,somm->aretelist){
-                    int index_arete = areteliste.indexOf(_arete);
-                    if (index_arete != -1)
-                        areteliste.removeAt(index_arete);
-                }
-                foreach(arc * _arc , somm->arclist){
-                    int index_arc = arcliste.indexOf(_arc);
-                    if (index_arc != -1)
-                        arcliste.removeAt(index_arc);
-                }
-                somm->supprimerArcs();
-                somm->supprimerAretes();
-                allezAvant.append(0);
-                tmpSommetAvant.append(somm->scenePos());
-                this->removeItem(somm);
-                sommetListe.removeLast();
-                delete somm;
+void graphscene::revenir(){
+    int lengh = revenirArriere.length();
+    if(lengh>0){
+        if(revenirArriere.last() == 0){
+            sommet * somm = qgraphicsitem_cast<sommet *>(sommetListe.last());
+            foreach(arete *_arete ,somm->aretelist){
+                int index_arete = areteliste.indexOf(_arete);
+                if (index_arete != -1)
+                    areteliste.removeAt(index_arete);
             }
-            if(revenirArriere.last() == 1 && areteliste.length()>0){
-                arete * _aret = qgraphicsitem_cast<arete *>(areteliste.last());
-                _aret->sourceSommet()->supprimerArete(_aret);
-                _aret->destSommet()->supprimerArete(_aret);
-                this->removeItem(_aret);          
-                areteliste.removeLast();
-                delete(_aret);
+            foreach(arc * _arc , somm->arclist){
+                int index_arc = arcliste.indexOf(_arc);
+                if (index_arc != -1)
+                    arcliste.removeAt(index_arc);
             }
-            if(revenirArriere.last() == 2 && arcliste.length()>0){
-                arc * _ar = qgraphicsitem_cast<arc *>(arcliste.last());
-                _ar->sourceSommet()->supprimerArc(_ar);
-                _ar->destSommet()->supprimerArc(_ar);
-                this->removeItem(_ar);
-                arcliste.removeLast();
-                delete(_ar);
+            somm->supprimerArcs();
+            somm->supprimerAretes();
+            allezAvant.append(0);
+            tmpSommetAvant.append(somm->scenePos());
+            this->removeItem(somm);
+            sommetListe.removeLast();
+            delete somm;
+        }
+        else if(revenirArriere.last() == 1 && areteliste.length()>0){
+            arete * _aret = qgraphicsitem_cast<arete *>(areteliste.last());
+            _aret->sourceSommet()->supprimerArete(_aret);
+            _aret->destSommet()->supprimerArete(_aret);
+            this->removeItem(_aret);
+            areteliste.removeLast();
+            delete(_aret);
+        }
+        else if(revenirArriere.last() == 2 && arcliste.length()>0){
+            arc * _ar = qgraphicsitem_cast<arc *>(arcliste.last());
+            _ar->sourceSommet()->supprimerArc(_ar);
+            _ar->destSommet()->supprimerArc(_ar);
+            this->removeItem(_ar);
+            arcliste.removeLast();
+            delete(_ar);
+        }
+        else if(revenirArriere.last() == 3){
+            if(tmpSommetArriere.length()>0){
+                allezAvant.append(1);
+                creerSommet(tmpSommetArriere.last(),QString::number(val),"1" ,true,-1,0,false);
+                tmpSommetArriere.removeLast();
             }
-            if(revenirArriere.last() == 3){
-                if(tmpSommetArriere.length()>0){
-                    allezAvant.append(1);
-                    creerSommet(tmpSommetArriere.last(),QString::number(val),"1" ,true,-1,0,false);
-                    tmpSommetArriere.removeLast();
-                }
-            }
-
-            revenirArriere.removeLast();
         }
 
+        revenirArriere.removeLast();
     }
+
+}
 
 //FONCTION POUR ALLER EN AVANT
-    void graphscene::alleravant(){
-        if(!allezAvant.empty()){
-            if(allezAvant.last() == 0){
-                creerSommet(tmpSommetAvant.last(),QString::number(val),"1" ,true,-1,0,false);
-                tmpSommetAvant.removeLast();
-                allezAvant.removeLast();
-            }
-            if(allezAvant.last() == 1){
-                sommet * somm = qgraphicsitem_cast<sommet *>(sommetListe.last());
-                foreach(arete *_arete ,somm->aretelist){
-                    int index_arete = areteliste.indexOf(_arete);
-                    if (index_arete != -1)
-                        areteliste.removeAt(index_arete);
-                }
-                foreach(arc * _arc , somm->arclist){
-                    int index_arc = arcliste.indexOf(_arc);
-                    if (index_arc != -1)
-                        arcliste.removeAt(index_arc);
-                }
-                somm->supprimerArcs();
-                somm->supprimerAretes();
-                revenirArriere.append(3);
-                tmpSommetArriere.append(somm->scenePos());
-                this->removeItem(somm);
-                sommetListe.removeLast();
-                delete somm;
-                allezAvant.removeLast();
-            }
-
+void graphscene::alleravant(){
+    if(!allezAvant.empty()){
+        if(allezAvant.last() == 0){
+            creerSommet(tmpSommetAvant.last(),QString::number(val),"1" ,true,-1,0,false);
+            tmpSommetAvant.removeLast();
+            allezAvant.removeLast();
         }
+        else if(allezAvant.last() == 1){
+            sommet * somm = qgraphicsitem_cast<sommet *>(sommetListe.last());
+            foreach(arete *_arete ,somm->aretelist){
+                int index_arete = areteliste.indexOf(_arete);
+                if (index_arete != -1)
+                    areteliste.removeAt(index_arete);
+            }
+            foreach(arc * _arc , somm->arclist){
+                int index_arc = arcliste.indexOf(_arc);
+                if (index_arc != -1)
+                    arcliste.removeAt(index_arc);
+            }
+            somm->supprimerArcs();
+            somm->supprimerAretes();
+            revenirArriere.append(3);
+            tmpSommetArriere.append(somm->scenePos());
+            this->removeItem(somm);
+            sommetListe.removeLast();
+            delete somm;
+            allezAvant.removeLast();
+        }
+
     }
+}
 
 
 //....................................................................................
@@ -810,153 +836,153 @@ void graphscene::ouvrir_scene(QString filename){
 //ALGORITHME GENERATION D'UNE POPULATION INITIALE(OPEN SHOP)
 void graphscene::populationInitial(){
     //N.B dans cette algorithme on va utiliser arcliste2 (avec e2 à la fin) qui va contenir seulement
-        //les arcs disjonctives puis on va l'ajoute a arclist de chaque sommet ,
-        //et lorsque on termine et on va passe à un autre individu on va le supprimmer de l'arclist
-        //affectation des valeurs des arcs à les sommets(temps de job sur machine)
-        temps();
+    //les arcs disjonctives puis on va l'ajoute a arclist de chaque sommet ,
+    //et lorsque on termine et on va passe à un autre individu on va le supprimmer de l'arclist
+    //affectation des valeurs des arcs à les sommets(temps de job sur machine)
+    temps();
 
-        //calcule de nombre de machines
+    //calcule de nombre de machines
 
 
-        foreach(sommet *som ,sommetListe){
-            if(som->valMachine.toInt() > nb_mach){
-                nb_mach = som->valMachine.toInt();
-            }
-
-        }
-        int i = 1;
-        // la premiere proposition de solution
-        //sommetParcourt designe individu qui va faire le parcourt pour remplir la population
-        //tab un tableau pour les indices de fin-1 de chaque consécutif des machines
-        while(i != nb_mach + 1 ){
-            foreach(sommet *som , sommetListe){
-                if(som->valMachine.toInt() == i){
-                    sommetParcourt.append(som);
-                }
-            }
-            tab.append(sommetParcourt.length());
-            i++;
+    foreach(sommet *som ,sommetListe){
+        if(som->valMachine.toInt() > nb_mach){
+            nb_mach = som->valMachine.toInt();
         }
 
-        if(!arcliste2.isEmpty()){
-            arcliste2.clear();
+    }
+    int i = 1;
+    // la premiere proposition de solution
+    //sommetParcourt designe individu qui va faire le parcourt pour remplir la population
+    //tab un tableau pour les indices de fin-1 de chaque consécutif des machines
+    while(i != nb_mach + 1 ){
+        foreach(sommet *som , sommetListe){
+            if(som->valMachine.toInt() == i){
+                sommetParcourt.append(som);
+            }
+        }
+        tab.append(sommetParcourt.length());
+        i++;
+    }
+
+    if(!arcliste2.isEmpty()){
+        arcliste2.clear();
+    }
+
+    // ajouter les arcs
+    int n = 0;
+    int j = 0;
+    int k = tab.at(n) - 1;
+    while(n != nb_mach){
+
+
+        for(int i = j ; i < k ;i++){
+            _arc = new arc(sommetParcourt.at(i), sommetParcourt.at(i+1));
+            _arc->valarc = sommetParcourt.at(i)->temps;
+            arcliste2.append(_arc);
         }
 
-        // ajouter les arcs
-        int n = 0;
-        int j = 0;
-        int k = tab.at(n) - 1;
-        while(n != nb_mach){
+        j = tab.at(n);
+        n++;
+        if(n < tab.length())
+            k = tab.at(n) - 1;
+    }
+
+    //ajoute des arcs de arcliste2 (disjonctives) au arclist de cahque sommet
+    foreach(arc * ac , arcliste2){
+        ac->destSommet()->arclist.append(ac);
+        ac->sourceSommet()->arclist.append(ac);
+    }
+
+    int nmbre_population = 0;
 
 
-            for(int i = j ; i < k ;i++){
-                _arc = new arc(sommetParcourt.at(i), sommetParcourt.at(i+1));
-                _arc->valarc = sommetParcourt.at(i)->temps;
-                arcliste2.append(_arc);
-            }
+    while (nmbre_population != 20) {
 
-            j = tab.at(n);
-            n++;
-            if(n < tab.length())
-                k = tab.at(n) - 1;
+        //creation d'une liste des sommets temporaire qui contient les sommets de sommetParcourt
+        //et les sommets de debut et fin
+        QList<sommet *>sommetParcourt_tmp = sommetParcourt;
+        foreach(sommet *som , sommetListe){
+            if(som->modde == 1)
+                sommetParcourt_tmp.prepend(som);
+            else if (som->modde == 2)
+                sommetParcourt_tmp.append(som);
         }
 
-        //ajoute des arcs de arcliste2 (disjonctives) au arclist de cahque sommet
-        foreach(arc * ac , arcliste2){
-            ac->destSommet()->arclist.append(ac);
-            ac->sourceSommet()->arclist.append(ac);
+        //test de liste temporaire (indivisu)
+        //Si valide on ajoute a la population
+
+        if(!cycle(sommetParcourt_tmp) && population.contains(sommetParcourt) == false){
+            qDebug() << sommetParcourt.length();
+            //ajoute l'individu à la liste de population ainsi que leur makespan a liste de makespan
+            population.append(sommetParcourt);
+            makespan.append(algoPotentiel(sommetParcourt_tmp));
+            nmbre_population++;
+            qDebug() << nmbre_population;
         }
 
-        int nmbre_population = 0;
+        //suppression des arcs disjonctives dans l'arclist de chaque sommet
+        foreach(arc *ac, arcliste2){
+            int indice_ac1 = ac->destSommet()->arclist.indexOf(ac);
+            ac->destSommet()->arclist.removeAt(indice_ac1);
+            int indice_ac2 = ac->sourceSommet()->arclist.indexOf(ac);
+            ac->sourceSommet()->arclist.removeAt(indice_ac2);
+            arcliste2.removeAt(arcliste2.indexOf(ac));
+            delete ac;
+        }
 
 
-        while (nmbre_population != 20) {
+        if( nmbre_population != 20)  // stoper creation des individus et des arcs si le nombre de population est 20
+        {
 
-            //creation d'une liste des sommets temporaire qui contient les sommets de sommetParcourt
-            //et les sommets de debut et fin
-            QList<sommet *>sommetParcourt_tmp = sommetParcourt;
-            foreach(sommet *som , sommetListe){
-                if(som->modde == 1)
-                    sommetParcourt_tmp.prepend(som);
-                else if (som->modde == 2)
-                    sommetParcourt_tmp.append(som);
-            }
+            int m3 = 0;//pour parcourt le nombre de machine
+            int j3 = 0;//pour parcourt les indices de debut
+            int k3 = tab.at(m3) - 1;//pour parcourt les indices de fin
 
-            //test de liste temporaire (indivisu)
-            //Si valide on ajoute a la population
+            while(m3 != nb_mach){
 
-            if(!cycle(sommetParcourt_tmp) && population.contains(sommetParcourt) == false){
-                qDebug() << sommetParcourt.length();
-                //ajoute l'individu à la liste de population ainsi que leur makespan a liste de makespan
-                population.append(sommetParcourt);
-                makespan.append(algoPotentiel(sommetParcourt_tmp));
-                nmbre_population++;
-                qDebug() << nmbre_population;
-            }
-
-            //suppression des arcs disjonctives dans l'arclist de chaque sommet
-            foreach(arc *ac, arcliste2){
-                int indice_ac1 = ac->destSommet()->arclist.indexOf(ac);
-                ac->destSommet()->arclist.removeAt(indice_ac1);
-                int indice_ac2 = ac->sourceSommet()->arclist.indexOf(ac);
-                ac->sourceSommet()->arclist.removeAt(indice_ac2);
-                arcliste2.removeAt(arcliste2.indexOf(ac));
-                delete ac;
-            }
-
-
-            if( nmbre_population != 20)  // stoper creation des individus et des arcs si le nombre de population est 20
-            {
-
-                int m3 = 0;//pour parcourt le nombre de machine
-                int j3 = 0;//pour parcourt les indices de debut
-                int k3 = tab.at(m3) - 1;//pour parcourt les indices de fin
-
-                while(m3 != nb_mach){
-
-                    //choisir les indices de deux taches de la machine m3 aleatoiremet
-                    int rand1 = qrand() % (k3 + 1 - j3) + j3 ;
-                    int rand2 = qrand() % (k3 + 1 - j3) + j3 ;
-                    while(rand2 == rand1){
-                        rand1 = qrand() % (k3 + 1 - j3) + j3 ;
-                        rand2 = qrand() % (k3 + 1 - j3) + j3 ;
-                    }
-
-                    //PErmutation de deux taches
-                    sommetParcourt.swap(rand1,rand2);
-
-                    j3 = tab.at(m3);
-                    m3++;
-                    //verification de ne dépassement de taille de tab
-                    if(m3 < tab.length())
-                        k3 = tab.at(m3) - 1;
+                //choisir les indices de deux taches de la machine m3 aleatoiremet
+                int rand1 = qrand() % (k3 + 1 - j3) + j3 ;
+                int rand2 = qrand() % (k3 + 1 - j3) + j3 ;
+                while(rand2 == rand1){
+                    rand1 = qrand() % (k3 + 1 - j3) + j3 ;
+                    rand2 = qrand() % (k3 + 1 - j3) + j3 ;
                 }
 
-                // ajouter a nouveau les arcs
-                int n2 = 0;
-                int j2 = 0;
-                int k2 = tab.at(n2) - 1;
-                while(n2 != nb_mach){
+                //PErmutation de deux taches
+                sommetParcourt.swap(rand1,rand2);
+
+                j3 = tab.at(m3);
+                m3++;
+                //verification de ne dépassement de taille de tab
+                if(m3 < tab.length())
+                    k3 = tab.at(m3) - 1;
+            }
+
+            // ajouter a nouveau les arcs
+            int n2 = 0;
+            int j2 = 0;
+            int k2 = tab.at(n2) - 1;
+            while(n2 != nb_mach){
 
 
-                    for(int i = j2 ; i < k2 ;i++){
-                        _arc = new arc(sommetParcourt.at(i), sommetParcourt.at(i+1));
-                        _arc->valarc = sommetParcourt.at(i)->temps;
-                        arcliste2.append(_arc);
-                    }
-
-                    j2 = tab.at(n2);
-                    n2++;
-                    if(n2 < tab.length())
-                        k2 = tab.at(n2) - 1;
+                for(int i = j2 ; i < k2 ;i++){
+                    _arc = new arc(sommetParcourt.at(i), sommetParcourt.at(i+1));
+                    _arc->valarc = sommetParcourt.at(i)->temps;
+                    arcliste2.append(_arc);
                 }
-                //ajout les arcs dans arclist de chaque sommet
-                foreach(arc * ac , arcliste2){
-                    ac->destSommet()->arclist.append(ac);
-                    ac->sourceSommet()->arclist.append(ac);
-                }
+
+                j2 = tab.at(n2);
+                n2++;
+                if(n2 < tab.length())
+                    k2 = tab.at(n2) - 1;
+            }
+            //ajout les arcs dans arclist de chaque sommet
+            foreach(arc * ac , arcliste2){
+                ac->destSommet()->arclist.append(ac);
+                ac->sourceSommet()->arclist.append(ac);
             }
         }
+    }
 
 }
 
@@ -1092,12 +1118,11 @@ void graphscene::croisement(){
 void graphscene::mutation(){
     bool repeter = true;
     int max_iteration = 0;//nombre max d'iteration
-
+    for(int i = 0;i <population.length() ;i++){
     while(repeter && max_iteration != 20){
 
         //selectionne un individu
-        int indice_individu = selection();
-        QList<sommet *>individu = population.at(indice_individu);
+        QList<sommet *>individu = population.at(i);
         int mach_aleat = qrand() % nb_mach;
         int indice_debut;
         int indice_fin;
@@ -1176,9 +1201,12 @@ void graphscene::mutation(){
         }
 
         if(!cycle(individu_mute_tmp)){
-            population[indice_individu] = individu_mute;
-            makespan[indice_individu] = algoPotentiel(individu_mute_tmp);
+            int makespan_tmp = algoPotentiel(individu_mute_tmp);
+            if(makespan.at(i) > makespan_tmp){
+            population[i] = individu_mute;
+            makespan[i] = makespan_tmp;
             repeter = false;
+            }
         }
         foreach(arc *ac, arcliste2){
             int indice_ac1 = ac->destSommet()->arclist.indexOf(ac);
@@ -1192,7 +1220,7 @@ void graphscene::mutation(){
         max_iteration++;
 
     }
-
+}
 }
 
 //ALGORITHME DE RANGEMENT(JOB SHOP)
@@ -1335,7 +1363,6 @@ void graphscene::flow_shop(){
     QList<QPoint > solution;
     int permuter = 0;
 
-
     foreach(sommet *som ,sommetListe){
         if(som->valMachine.toInt() > nb_mach){
             nb_mach = som->valMachine.toInt();
@@ -1344,10 +1371,10 @@ void graphscene::flow_shop(){
 
     int **job_temps = new int*[nb_mach];//matrice de temps
     for (int i = 0; i < nb_mach; i++)
-        job_temps[i] = new int[valJob];
+        job_temps[i] = new int[nb_Job];
 
     for(int i = 0; i < nb_mach; i++){   //initialisataion de matrice de temps
-        for(int j = 0; j < valJob; j++){
+        for(int j = 0; j < nb_Job; j++){
             foreach(sommet * som , sommetListe){
                 if(som->valMachine.toInt() == i+1 && som->sommetJob == j+1){
                     job_temps[i][j] = som->temps;
@@ -1358,7 +1385,7 @@ void graphscene::flow_shop(){
     }
 
     QList<QPoint > temps_total;    // y est le temps total pour chaque job et x le numero de job
-    for(int i = 0; i < valJob ; i++){
+    for(int i = 0; i < nb_Job ; i++){
         int s = 0;
         for(int j = 0 ; j < nb_mach ; j++){
             s = s + job_temps[j][i];
@@ -1490,6 +1517,7 @@ void graphscene::flow_shop(){
 
 //IMPLEMENTATION DE METHODE POTENTIEL
 double graphscene::algoPotentiel(QList<sommet *> Liste){
+    text->clear();
     text->setReadOnly(true);
     text->append("<h2>Resultat de la methode Potentiel :</h2>");
     calcul_degre(Liste);
@@ -1533,9 +1561,9 @@ double graphscene::algoPotentiel(QList<sommet *> Liste){
     }
 
     foreach(sommet *som, sommet_de_potentiel){
-         som->date_plutot = 0;
-         som->date_plutard = 100000000;
-     }
+        som->date_plutot = 0;
+        som->date_plutard = 100000000;
+    }
 
 
     //clacule des dates de debut au plus tot

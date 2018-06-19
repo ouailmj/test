@@ -24,7 +24,7 @@ class graphscene : public QGraphicsScene
 public:
     graphscene();//CONSTRUCTEUR
     enum modechoisi {insererSommet ,insererArete,
-                     ins,insererArc,supp,insererJob,insererDebut,
+                     selectionner,insererArc,supprimmer,insererJob,insererDebut,
                         insererFin};//afin d'etudier les cas des bouttons_slots
     void setModechoisi(modechoisi mode);//retourner le mode choisi
     bool isItemChange(int type);//afin de determiner si l'item est selectionner
@@ -49,19 +49,20 @@ public:
         void fonctionAleatoire();
 
     //fonctions de (enregistrer/ouvrir)
-        void structure_scene(QString filename);//FONCTION D'ENREGISREMENT
-        void ouvrir_scene(QString filename);//FONCTION POUR OUVRIR UN GRAPHE DEJA SAUVEGARDEE
+        void structure_scene(QString nom_de_fichier);//FONCTION D'ENREGISREMENT
+        void ouvrir_scene(QString nom_de_fichier);//FONCTION POUR OUVRIR UN GRAPHE DEJA SAUVEGARDEE
         bool exist = false;
         bool exist2 = false;
         bool usedinit = false;
         bool usedFin = false;
+        bool cliqueGauche;
         int nb_mach = 1;
 
     //pour mode job/machines
         QList<sommet *> jobSommet;
         bool job = false;
         bool creerjob = false;
-        int valJob;
+        int nb_Job;
         void temps();
 
     //fonctions et variables de job shop
@@ -87,7 +88,7 @@ public:
         QTextEdit *text = new QTextEdit();
 protected:
     //FONCTIONS DE CREATION DES DIFERENTS ELEMENT DE GRAPHE
-        void creerSommet(QPointF position, QString valSommet, QString valMachine, bool selected, int valJob, int modde, bool enregistrer);
+        void creerSommet(QPointF position, QString valSommet, QString valMachine, bool selected, int nb_Job, int modde, bool enregistrer);
         void creerArete(sommet * sourceSommet , sommet * destSommet, QString text);
         void creerArc(sommet * sourceSommet , sommet * destSommet, QString valarc);
         void supprimmerSommets();
