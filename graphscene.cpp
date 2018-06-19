@@ -1270,7 +1270,7 @@ void graphscene::jobshop(){
         }
         for(int i = 0; i<population.at(0).length() ; i++){
             qDebug()<< population.at(0).at(i)->sommetJob <<";" <<population.at(0).at(i)->valMachine;
-            txt->append("Job :" + QString::number(population.at(0).at(i)->sommetJob) + " ,machine :" + population.at(0).at(i)->valMachine) ;
+            txt->append("Machine :" + population.at(0).at(i)->valMachine + " ,job :" + QString::number(population.at(0).at(i)->sommetJob)) ;
         }
         txt->append("le cout(makespan) est de : " + QString::number(makespan.at(0)));
         qDebug()<< "makespan est :"<<makespan.at(0);

@@ -414,7 +414,7 @@ void fenetrePrincipale::jobSlot(){
     foreach (sommet *som, sene->sommetListe) {
         som->pLineEdit->hide();
     }
-    sene->setModechoisi(graphscene::insererSommet);
+    sene->setModechoisi(graphscene::selectionner);
 }
 
 //SLOT BOUTTON ARETE
